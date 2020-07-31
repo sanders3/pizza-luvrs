@@ -1,17 +1,22 @@
+const Secrets = require('@jwerre/secrets')
 const Sequelize = require('sequelize')
 
-const database = 'pizza_luvrs'
-const host = 'pizza-db.c2nkbluueezk.eu-west-1.rds.amazonaws.com'
-const username = 'postgres'
-const password = 'password'
+const config = Secrets.configSync({
+        region: 'eu-west-1'
+    })
+
+
+const pgConfig = config.pizza_luvrs_db_secret
+console.log(`connecting to ${pgConfig.dbname} on ${pgConfig.host}`)
 
 const pgClient = new Sequelize(
-    database,
-    username,
-    password,
+    pgConfig.dbname,
+    pgConfig.username,
+    pgConfig.password,
     {
-        host,
-        dialect: 'postgres'
+        host: pgConfig.host,
+        port: pgConfig.port,
+        dialect: pgConfig.engine
     }
 )
 
